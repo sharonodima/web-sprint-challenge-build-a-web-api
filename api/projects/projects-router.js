@@ -2,7 +2,7 @@
 const {
     validateProjectId,
     validateProject,
-  } = require("../projects/projects-middleware")
+  } = require("./projects-middleware")
 
 
 const express = require("express");
@@ -15,48 +15,48 @@ router.get('/', (req, res, next) => {
         res.json(projects)
       })
       .catch(next)
-  });
+});
 
 router.get('/:id', validateProjectId, (req, res) => {
     res.json(req.project)
-  });
+});
 
-router.post("/api/projects", validateProject, (req, res, next) => {
-    Project.insert({name: req.name})
+
+router.post("/", validateProject, (req, res, next) => {
+    Project.insert(req.body)
     .then(newProject => {
       res.status(201).json(newProject)
     })
     .catch(next)
 })
 
-router.put('/api/projects/:id', validateProjectId, validateProject, (req, res, next) => {
-    Project.update(req.params.id, {name: req.name})
+router.put('/:id', validateProjectId, validateProject, (req, res, next) => {
+    Project.update(req.params.id, req.body)
       .then(() => {
-        return Project.getById(req.params.id)
+        return Project.get(req.params.id)
       })
       .then(project=> {
         res.json(project)
       })
       .catch(next)
-  });
+});
 
-  router.delete('/api/projects/:id', validateProjectId, async (req, res) => {
-    try{
-      await Project.remove(req.params.id)
-      res.json(req.project)
-    } catch(err) {
-      next(err)
-    }
-  });
+router.delete('/:id', validateProjectId, async (req, res) => {
+try{
+    await Project.remove(req.params.id)
+    res.json(req.project)
+} catch(err) {
+    next(err)
+}
+});
 
-  router.get('/api/projects/:id/actions', validateProjectId, async (req, res) => {
-    try{
-      const result = await Project.getUserActions(req.params.id)
-      res.json(result)
-    } catch (err) {
-      next(err)
-    }
-  });
+router.get('/:id/actions', validateProjectId, async (req, res) => {
+try{
+    res.json(req.project.actions)
+} catch (err) {
+    next(err)
+}
+});
 
   
 
