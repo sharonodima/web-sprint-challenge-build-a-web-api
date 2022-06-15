@@ -18,12 +18,13 @@ function projectToBody(project) {
     ...project,
     completed: intToBoolean(project.completed),
   };
-
+console.log(project.actions)
   if (project.actions) {
-    result.actions = project.actions.map(action => ({
-      ...action,
-      completed: intToBoolean(action.completed),
-    }));
+    // result.actions = project.actions.map(action => ({
+    //   ...action,
+    //   completed: intToBoolean(action.completed),
+    // }));
+    result.actions = project.actions
   }
 
   return result;
